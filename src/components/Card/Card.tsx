@@ -1,28 +1,37 @@
 import React from 'react';
 import styles from './Card.module.scss'
-import {itemsType} from '../../App';
+import {itemType} from '../../App';
 
 
 type PropsType = {
 		title: string
 		price: number
 		imageUrl: string
-		onPlus: ({}: itemsType) => void
-		onFavorite: () => void
+		onPlus?: ({}: itemType) => void
+		onFavorite?: ({}: itemType) => void
+		favorited?: boolean
+		id: string
 }
 
-export const Card: React.FC<PropsType> = ({title, price, imageUrl, onPlus, onFavorite}) => {
+export const Card: React.FC<PropsType> = ({title, price, imageUrl, onPlus, onFavorite, favorited = false, id}) => {
 		const [isAdded, setIsAdded] = React.useState(false)
+		const [isFavorite, setIsFavorite] = React.useState(favorited)
 
 		const onClickPlus = () => {
-				onPlus({title, imageUrl, price})
+				onPlus?.({id, title, imageUrl, price})
 				setIsAdded(!isAdded)
+		}
+
+		const onClickFavorite = () => {
+				onFavorite?.({id, title, imageUrl, price})
+				setIsFavorite(!isFavorite)
 		}
 
 		return (
 				<div className={styles.card}>
-						<div className={styles.favorite} onClick={onFavorite}>
-								<img src="/img/heart-unliked.svg" alt="Unliked"/>
+						<div className={styles.favorite} onClick={onClickFavorite}>
+								<img src={isFavorite ? '/img/heart-liked.svg' : '/img/heart-unliked.svg'}
+								     alt="like"/>
 						</div>
 						<img width={133} height={112} src={imageUrl} alt="Sneakers"/>
 						<h5>{title}</h5>

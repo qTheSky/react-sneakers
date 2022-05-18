@@ -1,63 +1,93 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
+import axios from 'axios'
 import 'macro-css'
-import {Card} from './components/Card/Card'
-import Header from './components/Header';
+import {Header} from './components/Header';
 import {Drawer} from './components/Drawer';
+import {Routes, Route, Link} from 'react-router-dom';
+import {Home} from './components/pages/Home';
+import {Favorites} from './components/pages/Favorites';
 
 
-export type itemsType = {
+export type itemType = {
 		title: string
 		price: number
 		imageUrl: string
+		id: string
 }
 
-function App() {
-		let [items, setItems] = React.useState<itemsType[]>([])
-		let [cartItems, setCartItems] = React.useState<itemsType[]>([])
-		const [cartOpened, setCartOpened] = React.useState(false)
+
+export function App() {
+		const [items, setItems] = React.useState<itemType[]>([])
+		const [cartItems, setCartItems] = React.useState<itemType[]>([])
+		const [favorites, setFavorites] = React.useState<itemType[]>([])
+		const [searchValue, setSearchValue] = React.useState<string>('')
+		const [cartOpened, setCartOpened] = React.useState<boolean>(false)
 
 		React.useEffect(() => {
-				fetch('https://6284a4013060bbd3473c603f.mockapi.io/items')
-						.then((res) => {
-								return res.json()
-						})
-						.then((json) => {
-								setItems(json)
-						})
+				axios.get('https://6284a4013060bbd3473c603f.mockapi.io/items').then(res => {
+						setItems(res.data);
+				})
+				axios.get('https://6284a4013060bbd3473c603f.mockapi.io/cart').then(res => {
+						setCartItems(res.data);
+				})
+				axios.get('https://6284a4013060bbd3473c603f.mockapi.io/favorites').then(res => {
+						setFavorites(res.data);
+				})
 		}, []);
 
-		const onAddToCart = (obj: itemsType) => {
+		const onAddToCart = (obj: itemType) => {
+				console.log(obj)
+				axios.post('https://6284a4013060bbd3473c603f.mockapi.io/cart', obj)
 				setCartItems(prev => [...prev, obj])
 		}
 
+		const onRemoveItem = (id: string) => {
+				axios.delete(`https://6284a4013060bbd3473c603f.mockapi.io/cart/${id}`)
+				setCartItems((prev) => prev.filter(item => item.id !== id))
+		}
 
+		const onAddToFavorite = async (obj: itemType) => {
+				console.log(obj)
+				try {
+						if (favorites.find(favObj => favObj.id === obj.id)) {
+								axios.delete(`https://6284a4013060bbd3473c603f.mockapi.io/favorites/${obj.id}`)
+						} else {
+								const {data} = await axios.post('https://6284a4013060bbd3473c603f.mockapi.io/favorites', obj)
+								setFavorites(prev => [...prev, data])
+						}
+				} catch (error) {
+						alert('не удалосьdassad')
+				}
+		}
+
+		const onChangeSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+				setSearchValue(e.currentTarget.value)
+		}
 		return (
 				<div className="wrapper clear">
-						{cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)}/>}
+						{cartOpened && <Drawer items={cartItems}
+						                       onClose={() => setCartOpened(false)}
+						                       onRemove={onRemoveItem}
+						/>}
+
+
 						<Header onClickCart={() => setCartOpened(true)}/>
+						<Routes>
 
-						<div className="content p-40">
-								<div className={'d-flex align-center justify-between mb-40'}>
-										<h1>Все кроссовки</h1>
-										<div className={'search-block d-flex'}>
-												<img src="/img/search.svg" alt="Search"/>
-												<input placeholder={'Поиск...'}/>
-										</div>
-								</div>
+								<Route path={'/'}
+								       element={<Home items={items}
+								                      searchValue={searchValue}
+								                      onChangeSearchInput={onChangeSearchInput}
+								                      onAddToFavorite={onAddToFavorite}
+								                      onAddToCart={onAddToCart}
+								       />}/>
+								<Route path={'/favorites'}
+								       element={<Favorites items={favorites}
+								                           onAddToFavorite={onAddToFavorite}
+								       />}/>
 
-								<div className="d-flex flex-wrap">
-										{items.map(item => (
-												<Card title={item.title}
-												      price={item.price}
-												      imageUrl={item.imageUrl}
-												      onFavorite={() => console.log('Добавили в закладки')}
-												      onPlus={(obj) => onAddToCart(obj)}
-												/>
-										))}
-								</div>
-						</div>
+						</Routes>
+
 				</div>
 		);
 }
-
-export default App;
