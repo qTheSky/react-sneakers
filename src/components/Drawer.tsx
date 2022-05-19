@@ -17,11 +17,11 @@ export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
 								</h2>
 
 								{
-										items.length > 0 ?
-												<div>
+										items.length > 0
+												? <div>
 														<div className={'items'}>
 																{items.map((obj) => (
-																		<div className="cartItem d-flex align-center mb-20">
+																		<div key={obj.id} className="cartItem d-flex align-center mb-20">
 																				<div style={{backgroundImage: `url(${obj.imageUrl})`}}
 																				     className="cartItemImg"></div>
 
@@ -59,9 +59,9 @@ export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
 														<img className={'mb-20'} width={120} height={120} src="/img/empty-cart.jpg" alt="Empty"/>
 														<h2>Корзина пустая</h2>
 														<p className={'opacity-6'}>Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-														<button onClick={onClose} className={'greenButton'}><img src="/img/arrow.svg"
-														                                                         alt="Arrow"/> Вернуться
-																назад
+														<button onClick={onClose} className={'greenButton'}>
+																<img src="/img/arrow.svg" alt="Arrow"/>
+																Вернуться назад
 														</button>
 												</div>
 								}

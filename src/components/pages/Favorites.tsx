@@ -1,14 +1,16 @@
 import React from 'react';
-import {itemType} from '../../App';
 import {Card} from '../Card/Card';
+import AppContext from '../../context';
+import {itemType} from '../../App';
 
 
-type Props = {
-		items: itemType[]
-		onAddToFavorite: any
-}
+type Props = {}
 
-export const Favorites: React.FC<Props> = ({items, onAddToFavorite}) => {
+export const Favorites: React.FC<Props> = () => {
+
+		const {favorites, onAddToFavorite}: any = React.useContext(AppContext)
+
+
 		return (
 				<div className="content p-40">
 						<div className={'d-flex align-center justify-between mb-40'}>
@@ -16,8 +18,12 @@ export const Favorites: React.FC<Props> = ({items, onAddToFavorite}) => {
 						</div>
 
 						<div className="d-flex flex-wrap">
-								{items.map(item => (
-										<Card key={item.id} favorited={true} onFavorite={onAddToFavorite}{...item}/>
+								{favorites.map((item: itemType, index: number) => (
+										<Card key={index}
+										      favorited={true}
+										      onFavorite={onAddToFavorite}
+										      {...item}
+										/>
 								))}
 						</div>
 				</div>

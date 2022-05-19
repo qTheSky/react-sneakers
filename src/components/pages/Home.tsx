@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import {Card} from '../Card/Card';
 import {itemType} from '../../App';
 
@@ -6,9 +6,10 @@ import {itemType} from '../../App';
 type Props = {
 		items: itemType[]
 		searchValue: string
-		onChangeSearchInput: any
-		onAddToFavorite: any
-		onAddToCart: any
+		onChangeSearchInput: (e: ChangeEvent<HTMLInputElement>) => void
+		onAddToFavorite: (obj: itemType) => void
+		onAddToCart: (obj: itemType) => void
+		isLoading: boolean
 }
 
 export const Home: React.FC<Props> = ({
@@ -16,8 +17,23 @@ export const Home: React.FC<Props> = ({
 		                                      searchValue,
 		                                      onChangeSearchInput,
 		                                      onAddToFavorite,
-		                                      onAddToCart
+		                                      onAddToCart,
+		                                      isLoading
                                       }) => {
+
+		const renderItems = () => {
+				const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+				return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => (
+						<Card
+								key={item && item.id}
+								onFavorite={(obj) => onAddToFavorite(obj)}
+								onPlus={(obj) => onAddToCart(obj)}
+								{...item}
+								loading={isLoading}
+						/>
+				))
+		}
+
 		return (
 				<div className="content p-40">
 						<div className={'d-flex align-center justify-between mb-40'}>
@@ -28,18 +44,7 @@ export const Home: React.FC<Props> = ({
 								</div>
 						</div>
 
-						<div className="d-flex flex-wrap">
-								{items
-										.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-										.map((item) => (
-												<Card
-														key={item.id}
-														onFavorite={(obj) => onAddToFavorite(obj)}
-														onPlus={(obj) => onAddToCart(obj)}
-														{...item}
-												/>
-										))}
-						</div>
+						<div className="d-flex flex-wrap">{renderItems()}</div>
 				</div>
 		);
 };
