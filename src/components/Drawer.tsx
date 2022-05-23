@@ -29,13 +29,13 @@ export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
 						setOrderId(data.id)
 						setIsOrderCompleted(true)
 						setCartItems([])
-						//костыль из за mockapi
+						//костыль из-за mockapi
 						for (let i = 0; i < cartItems.length; i++) {
 								const item = cartItems[i]
 								await axios.delete('https://6284a4013060bbd3473c603f.mockapi.io/cart/' + item.id)
 								await delay(1000)
 						}
-						//костыль из за mockapi
+						//костыль из-за mockapi
 				} catch (error) {
 						alert('Ошибка при создании заказа :(')
 				}
