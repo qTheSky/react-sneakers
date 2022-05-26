@@ -1,21 +1,21 @@
 import React from 'react';
-import {itemType} from '../App';
-import {Info} from './Info';
-import AppContext from '../context';
+import {itemType} from '../../App';
+import {Info} from '../Info';
 import axios from 'axios';
-
+import {useCart} from '../../hooks/useCart';
+import s from './Drawer.module.scss'
 
 type PropsType = {
 		onClose: () => void
 		items: itemType[]
 		onRemove: (id: string) => void
+		opened: boolean
 }
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
-
-		const {cartItems, setCartItems}: any = React.useContext(AppContext)
+export const Drawer: React.FC<PropsType> = ({onClose, items = [], onRemove, opened}) => {
+		const {cartItems, setCartItems, totalPrice} = useCart()
 		const [isOrderCompleted, setIsOrderCompleted] = React.useState<boolean>(false)
 		const [orderId, setOrderId] = React.useState<null | number>(null)
 		const [isLoading, setIsLoading] = React.useState<boolean>(false)
@@ -42,20 +42,21 @@ export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
 				setIsLoading(false)
 		};
 
+
 		return (
-				<div className="overlay">
-						<div className="drawer">
+				<div className={`${s.overlay} ${opened ? s.overlayVisible : ''}`}>
+						<div className={s.drawer}>
 								<h2 className={'d-flex justify-between mb-30'}>Корзина
 										<img onClick={onClose} className={'cu-p'} src="/img/btn-remove.svg" alt="Close"/>
 								</h2>
 
 								{items.length > 0
 										? <div className={'d-flex flex-column flex'}>
-												<div className={'items'}>
+												<div className={s.items}>
 														{items.map((obj) => (
-																<div key={obj.id} className="cartItem d-flex align-center mb-20">
+																<div key={obj.id} className={s.cartItem}>
 																		<div style={{backgroundImage: `url(${obj.imageUrl})`}}
-																		     className="cartItemImg"></div>
+																		     className={s.cartItemImg}></div>
 
 																		<div className={'mr-20 flex'}>
 																				<p className={'mb-5'}>{obj.title}</p>
@@ -63,26 +64,26 @@ export const Drawer: React.FC<PropsType> = ({onClose, items, onRemove}) => {
 																		</div>
 																		<img
 																				onClick={() => onRemove(obj.id)}
-																				className={'removeBtn'}
+																				className={s.removeBtn}
 																				src="/img/btn-remove.svg"
 																				alt="Remove"/>
 																</div>
 														))}
 												</div>
-												<div className="cartTotalBlock">
+												<div className={s.cartTotalBlock}>
 														<ul>
 																<li className={'d-flex'}>
 																		<span>Итого:</span>
 																		<div></div>
-																		<b>21 498 руб.</b>
+																		<b>{totalPrice} руб.</b>
 																</li>
 																<li className={'d-flex'}>
 																		<span>Налог 5%:</span>
 																		<div></div>
-																		<b>1074руб</b>
+																		<b>{Math.ceil(totalPrice * 0.05)} руб</b>
 																</li>
 														</ul>
-														<button disabled={isLoading} onClick={onClickOrder} className={'greenButton'}>
+														<button disabled={isLoading} onClick={onClickOrder} className="greenButton">
 																Оформить заказ <img src="/img/arrow.svg" alt="Arrow"/>
 														</button>
 												</div>

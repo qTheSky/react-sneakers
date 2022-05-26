@@ -9,10 +9,10 @@ type PropsType = {
 		title: string
 		price: number
 		imageUrl: string
+		id: string
 		onPlus?: ({}: itemType) => void
 		onFavorite?: ({}: itemType) => void
 		favorited?: boolean
-		id: string
 		loading?: boolean
 }
 export const Card: React.FC<PropsType> = ({
@@ -29,15 +29,14 @@ export const Card: React.FC<PropsType> = ({
 
 		const {isItemAdded}: any = React.useContext(AppContext)
 		const [isFavorite, setIsFavorite] = React.useState(favorited)
-
-		console.log(title, isItemAdded(id))
+		const obj = {id, parentId: id, title, imageUrl, price}
 
 		const onClickPlus = () => {
-				onPlus?.({id, title, imageUrl, price})
+				onPlus?.(obj)
 		}
 
 		const onClickFavorite = () => {
-				onFavorite?.({id, title, imageUrl, price})
+				onFavorite?.(obj)
 				setIsFavorite(!isFavorite)
 		}
 
@@ -61,8 +60,8 @@ export const Card: React.FC<PropsType> = ({
 										</ContentLoader>
 										: <>
 												<div className={styles.favorite} onClick={onClickFavorite}>
-														<img src={isFavorite ? '/img/heart-liked.svg' : '/img/heart-unliked.svg'}
-														     alt="like"/>
+														{onFavorite && <img src={isFavorite ? '/img/heart-liked.svg' : '/img/heart-unliked.svg'}
+														                    alt="like"/>}
 												</div>
 												<img width={'100%'} height={135} src={imageUrl} alt="Sneakers"/>
 												<h5>{title}</h5>
@@ -71,9 +70,9 @@ export const Card: React.FC<PropsType> = ({
 																<span>Цена:</span>
 																<b>{price}руб.</b>
 														</div>
-														<img className={styles.plus} onClick={onClickPlus}
-														     src={isItemAdded(id) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'}
-														     alt="Plus"/>
+														{onPlus && <img className={styles.plus} onClick={onClickPlus}
+														                src={isItemAdded(id) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'}
+														                alt="Plus"/>}
 												</div>
 										</>
 						}

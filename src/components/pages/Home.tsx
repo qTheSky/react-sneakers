@@ -25,7 +25,7 @@ export const Home: React.FC<Props> = ({
 				const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
 				return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => (
 						<Card
-								key={item && item.id}
+								key={item ? item.id : index}
 								onFavorite={(obj) => onAddToFavorite(obj)}
 								onPlus={(obj) => onAddToCart(obj)}
 								{...item}
