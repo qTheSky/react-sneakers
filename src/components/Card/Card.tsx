@@ -60,7 +60,7 @@ export const Card: React.FC<PropsType> = ({
 										</ContentLoader>
 										: <>
 												<div className={styles.favorite} onClick={onClickFavorite}>
-														{onFavorite && <img src={isFavorite ? '/img/heart-liked.svg' : '/img/heart-unliked.svg'}
+														{onFavorite && <img src={isFavorite ? 'img/heart-liked.svg' : 'img/heart-unliked.svg'}
 														                    alt="like"/>}
 												</div>
 												<img width={'100%'} height={135} src={imageUrl} alt="Sneakers"/>
@@ -71,7 +71,7 @@ export const Card: React.FC<PropsType> = ({
 																<b>{price}руб.</b>
 														</div>
 														{onPlus && <img className={styles.plus} onClick={onClickPlus}
-														                src={isItemAdded(id) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'}
+														                src={isItemAdded(id) ? 'img/btn-checked.svg' : 'img/btn-plus.svg'}
 														                alt="Plus"/>}
 												</div>
 										</>

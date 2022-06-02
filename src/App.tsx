@@ -122,7 +122,7 @@ export function App() {
 								        onRemove={onRemoveItem} opened={cartOpened}/>
 								<Header onClickCart={() => setCartOpened(true)}/>
 								<Routes>
-										<Route path={'/'} element={
+										<Route path={'/react-sneakers'} element={
 												<Home items={items}
 												      searchValue={searchValue}
 												      onChangeSearchInput={onChangeSearchInput}
@@ -130,9 +130,9 @@ export function App() {
 												      onAddToCart={onAddToCart}
 												      isLoading={isLoading}
 												/>}/>
-										<Route path={'/favorites'} element={
+										<Route path={'/react-sneakers/favorites'} element={
 												<Favorites/>}/>
-										<Route path={'/orders'} element={<Orders/>}/>
+										<Route path={'/react-sneakers/orders'} element={<Orders/>}/>
 								</Routes>
 						</div>
 				</AppContext.Provider>

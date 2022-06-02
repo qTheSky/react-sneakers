@@ -2,13 +2,11 @@ import React, {useState} from 'react';
 import {Card} from '../Card/Card';
 import {itemType} from '../../App';
 import axios from 'axios';
-import AppContext from '../../context';
 
 
 type Props = {}
 
 export const Orders: React.FC<Props> = () => {
-		const {onAddToFavorite, onAddToCart}: any = React.useContext(AppContext)
 		const [orders, setOrders] = useState<itemType[]>([])
 		const [isLoading, setIsloading] = useState<boolean>(true)
 

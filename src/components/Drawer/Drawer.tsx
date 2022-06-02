@@ -44,10 +44,10 @@ export const Drawer: React.FC<PropsType> = ({onClose, items = [], onRemove, open
 
 
 		return (
-				<div className={`${s.overlay} ${opened ? s.overlayVisible : ''}`}>
+				<div className={`pos-a ${s.overlay} ${opened ? s.overlayVisible : ''}`}>
 						<div className={s.drawer}>
 								<h2 className={'d-flex justify-between mb-30'}>Корзина
-										<img onClick={onClose} className={'cu-p'} src="/img/btn-remove.svg" alt="Close"/>
+										<img onClick={onClose} className={'cu-p'} src="img/btn-remove.svg" alt="Close"/>
 								</h2>
 
 								{items.length > 0
@@ -65,7 +65,7 @@ export const Drawer: React.FC<PropsType> = ({onClose, items = [], onRemove, open
 																		<img
 																				onClick={() => onRemove(obj.id)}
 																				className={s.removeBtn}
-																				src="/img/btn-remove.svg"
+																				src="img/btn-remove.svg"
 																				alt="Remove"/>
 																</div>
 														))}
@@ -84,14 +84,14 @@ export const Drawer: React.FC<PropsType> = ({onClose, items = [], onRemove, open
 																</li>
 														</ul>
 														<button disabled={isLoading} onClick={onClickOrder} className="greenButton">
-																Оформить заказ <img src="/img/arrow.svg" alt="Arrow"/>
+																Оформить заказ <img src="img/arrow.svg" alt="Arrow"/>
 														</button>
 												</div>
 										</div>
 										:
 										<Info title={isOrderCompleted ? 'Заказ оформлен' : 'Корзина пустая'}
 										      description={isOrderCompleted ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'}
-										      image={isOrderCompleted ? '/img/complete-order.jpg' : '/img/empty-cart.jpg'}
+										      image={isOrderCompleted ? 'img/complete-order.jpg' : 'img/empty-cart.jpg'}
 										/>
 								}
 						</div>
